@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DivStylist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ── Header ───────────────────────────────────────────────── -->
+<header>
+  <div class="header-left">
+    <a class="logo" href="/">
+      <div class="logo-mark"></div>
+      DivStylist
+    </a>
+    <span class="header-desc">Style a div and copy the CSS</span>
+  </div>
+</header>
+
+<!-- ── Main ─────────────────────────────────────────────────── -->
+<main>
+
+  <!-- Canvas -->
+  <section class="canvas-pane">
+    <div id="the-div"></div>
+    <span class="canvas-hint">Live preview</span>
+  </section>
+
+  <!-- Control panel -->
+  <aside class="panel">
+
+    <!-- Fill -->
+    <div class="panel-section">
+      <div class="section-label">Fill</div>
+      <div class="prop-row">
+        <span class="prop-label">Background</span>
+        <div class="color-wrap">
+          <div class="color-swatch" title="Pick color">
+            <div class="color-swatch-preview" id="swatch-preview"></div>
+            <input type="color" id="color-picker" value="#7ba7e5" aria-label="Background color" />
+          </div>
+          <input class="hex-input" type="text" id="hex-input" value="#7ba7e5"
+                 maxlength="7" aria-label="Hex value" spellcheck="false" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Shape -->
+    <div class="panel-section">
+      <div class="section-label">Shape</div>
+      <div style="display:flex; flex-direction:column; gap:0.625rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="prop-label">Border radius</span>
+          <span class="prop-value" id="radius-val">8px</span>
+        </div>
+        <div class="range-wrap">
+          <input type="range" id="radius-slider" min="0" max="100" value="8" aria-label="Border radius" />
+          <div class="range-labels"><span>Square</span><span>Circle</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div class="panel-section">
+      <div class="section-label">Size</div>
+      <div class="size-inputs">
+        <div class="size-field">
+          <label for="width-input">W</label>
+          <input type="number" id="width-input" value="200" min="40" max="480" aria-label="Width" />
+          <span class="size-unit">px</span>
+        </div>
+        <div class="size-field">
+          <label for="height-input">H</label>
+          <input type="number" id="height-input" value="200" min="40" max="480" aria-label="Height" />
+          <span class="size-unit">px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Effects -->
+    <div class="panel-section">
+      <div class="section-label">Effects</div>
+      <div class="toggle-row">
+        <span class="prop-label">Drop shadow</span>
+        <label class="toggle">
+          <input type="checkbox" id="shadow-toggle" checked aria-label="Toggle drop shadow" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Generated CSS -->
+    <div class="panel-section">
+      <div class="section-label">Generated CSS</div>
+      <div class="css-preview" id="css-preview" aria-live="polite"></div>
+      <div style="margin-top:0.75rem;">
+        <button class="btn-export" id="copy-btn" aria-label="Copy CSS to clipboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy CSS
+        </button>
+      </div>
+    </div>
+
+  </aside>
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
