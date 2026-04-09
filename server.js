@@ -3,9 +3,24 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import zlib from 'zlib';
+import { PostHog } from 'posthog-node';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 80;
+
+const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
+  host: process.env.POSTHOG_HOST,
+  enableExceptionAutocapture: true,
+});
+
+process.on('SIGINT', async () => {
+  await posthog.shutdown();
+  process.exit(0);
+});
+process.on('SIGTERM', async () => {
+  await posthog.shutdown();
+  process.exit(0);
+});
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -30,15 +45,33 @@ http.createServer((req, res) => {
   const filePath = path.join(__dirname, urlPath);
   const ext = path.extname(filePath);
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+  const distinctId = req.headers['x-posthog-distinct-id'] || req.socket.remoteAddress || 'anonymous';
 
   fs.readFile(filePath, (err, data) => {
     if (err) {
+      posthog.captureException(err, distinctId, {
+        $current_url: req.url,
+        path: urlPath,
+      });
       fs.readFile(path.join(__dirname, 'index.html'), (err2, fallback) => {
         if (err2) { res.writeHead(404); res.end('Not found'); return; }
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', ...SECURITY_HEADERS });
         res.end(fallback);
       });
       return;
+    }
+
+    if (urlPath === '/index.html') {
+      posthog.capture({
+        distinctId,
+        event: 'page_viewed',
+        properties: {
+          $current_url: req.url,
+          $referrer: req.headers['referer'] || '',
+          $user_agent: req.headers['user-agent'] || '',
+          ...(req.headers['x-posthog-session-id'] && { $session_id: req.headers['x-posthog-session-id'] }),
+        },
+      });
     }
 
     const acceptEncoding = req.headers['accept-encoding'] || '';
