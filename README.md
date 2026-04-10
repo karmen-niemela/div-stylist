@@ -6,9 +6,17 @@ A tool for styling a single `div` element.
 
 The simplest approach is to open `index.html` directly in your browser — no server needed.
 
-### Docker (nginx)
+### With Node
 
-To run locally with the same nginx setup used in production-like environments:
+To run locally with the Node server:
+
+```bash
+node server.js
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
+### With Docker
 
 ```bash
 docker compose up --build
@@ -22,15 +30,6 @@ To stop:
 docker compose down
 ```
 
-The Docker setup uses nginx with gzip compression, static asset caching, and security headers (see `nginx.conf`).
-
 ## Deployment
 
-This is a static site with no build step. To deploy on Vercel:
-
-1. Push the repo to GitHub
-2. Import the repo at [vercel.com](https://vercel.com)
-3. Vercel auto-detects it as a static site — leave the build command and output directory blank
-4. Deploy
-
-Vercel will ignore the Docker/nginx files and serve `index.html` directly.
+The app is hosted on Heroku and deploys automatically when changes are pushed to the `main` branch via the GitHub integration.
