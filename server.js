@@ -13,14 +13,6 @@ const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
   enableExceptionAutocapture: true,
 });
 
-process.on('SIGINT', async () => {
-  await posthog.shutdown();
-  process.exit(0);
-});
-process.on('SIGTERM', async () => {
-  await posthog.shutdown();
-  process.exit(0);
-});
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -56,6 +48,7 @@ export default async function handler(req, res) {
       $current_url: req.url,
       path: urlPath,
     });
+    await posthog.flushAsync();
     try {
       const fallback = await fs.readFile(path.join(__dirname, 'index.html'));
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', ...SECURITY_HEADERS });
@@ -100,4 +93,6 @@ export default async function handler(req, res) {
     res.writeHead(200, headers);
     res.end(data);
   }
+
+  await posthog.flushAsync();
 }
