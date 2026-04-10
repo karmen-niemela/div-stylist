@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import zlib from 'zlib';
@@ -25,7 +26,7 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
 };
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const urlPath = req.url === '/' ? '/index.html' : req.url;
   const filePath = path.join(__dirname, urlPath);
   const ext = path.extname(filePath);
@@ -67,3 +68,6 @@ export default async function handler(req, res) {
     res.end(data);
   }
 }
+
+const PORT = process.env.PORT || 3000;
+http.createServer(handler).listen(PORT);

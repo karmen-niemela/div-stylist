@@ -8,6 +8,6 @@ COPY index.html ./
 COPY styles.css ./
 COPY js/ ./js/
 
-EXPOSE 80
+EXPOSE $PORT
 
 CMD ["node", "server.js"]
