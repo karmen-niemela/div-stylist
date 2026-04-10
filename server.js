@@ -7,6 +7,7 @@ import { promisify } from 'util';
 
 const gzip = promisify(zlib.gzip);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DIST = path.join(__dirname, 'dist');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -28,7 +29,7 @@ const SECURITY_HEADERS = {
 
 async function handler(req, res) {
   const urlPath = req.url === '/' ? '/index.html' : req.url;
-  const filePath = path.join(__dirname, urlPath);
+  const filePath = path.join(DIST, urlPath);
   const ext = path.extname(filePath);
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
@@ -37,7 +38,7 @@ async function handler(req, res) {
     data = await fs.readFile(filePath);
   } catch {
     try {
-      const fallback = await fs.readFile(path.join(__dirname, 'index.html'));
+      const fallback = await fs.readFile(path.join(DIST, 'index.html'));
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', ...SECURITY_HEADERS });
       res.end(fallback);
     } catch {
