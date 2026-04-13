@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode dev",
+    "build": "if [ \"$HEROKU_ENV\" = 'production' ]; then vite build --mode production; else vite build --mode dev; fi",
     "build:dev": "vite build --mode dev",
     "build:prod": "vite build --mode production",
     "start": "node server.js"
