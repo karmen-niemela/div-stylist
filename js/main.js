@@ -4,7 +4,6 @@ import posthog from 'posthog-js';
 
 posthog.init(import.meta.env.POSTHOG_API_KEY, {
   api_host: import.meta.env.POSTHOG_HOST,
-  defaults: '2026-01-30',
   autocapture: false
 });
 
