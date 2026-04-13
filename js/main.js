@@ -1,5 +1,11 @@
 import { state } from './state.js';
 import { applyStyles, getRawCSS } from './render.js';
+import posthog from 'posthog-js';
+
+posthog.init(import.meta.env.POSTHOG_API_KEY, {
+  api_host: import.meta.env.POSTHOG_HOST,
+  defaults: '2026-01-30'
+});
 
 const colorPicker  = document.getElementById('color-picker');
 const hexInput     = document.getElementById('hex-input');
