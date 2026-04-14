@@ -17,6 +17,4 @@ export const EVENTS = {
 
 export const analytics = {
   track(event, props) { posthog.capture(event, props); },
-  identify(userId, props) { posthog.identify(userId, props); },
-  reset() { posthog.reset(); },
 };
