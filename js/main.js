@@ -1,13 +1,6 @@
 import { state } from './state.js';
 import { applyStyles, getRawCSS } from './render.js';
-import posthog from 'posthog-js';
-
-posthog.init(import.meta.env.POSTHOG_API_KEY, {
-  api_host: import.meta.env.POSTHOG_HOST,
-  defaults: '2026-01-30',
-  disable_compression: true,
-  autocapture: false
-});
+import { analytics, EVENTS } from './analytics.js';
 
 const colorPicker  = document.getElementById('color-picker');
 const hexInput     = document.getElementById('hex-input');
@@ -23,12 +16,17 @@ colorPicker.addEventListener('input', (e) => {
   applyStyles();
 });
 
+colorPicker.addEventListener('change', (e) => {
+  analytics.track(EVENTS.COLOR_UPDATED, { method: 'color_picker' });
+});
+
 hexInput.addEventListener('input', (e) => {
   const val = e.target.value.trim();
   if (/^#[0-9a-fA-F]{6}$/.test(val)) {
     state.color       = val;
     colorPicker.value = val;
     applyStyles();
+    analytics.track(EVENTS.COLOR_UPDATED, { method: 'hex_code' });
   }
 });
 
@@ -37,25 +35,33 @@ radiusSlider.addEventListener('input', (e) => {
   applyStyles();
 });
 
+radiusSlider.addEventListener('change', () => {
+  analytics.track(EVENTS.RADIUS_UPDATED, { method: 'slider' });
+});
+
 widthInput.addEventListener('change', (e) => {
   state.width    = Math.min(480, Math.max(40, Number(e.target.value)));
   e.target.value = state.width;
   applyStyles();
+  analytics.track(EVENTS.SIZE_UPDATED);
 });
 
 heightInput.addEventListener('change', (e) => {
   state.height   = Math.min(480, Math.max(40, Number(e.target.value)));
   e.target.value = state.height;
   applyStyles();
+  analytics.track(EVENTS.SIZE_UPDATED);
 });
 
 shadowToggle.addEventListener('change', (e) => {
   state.shadow = e.target.checked;
   applyStyles();
+  analytics.track(EVENTS.SHADOW_UPDATED);
 });
 
 copyBtn.addEventListener('click', () => {
   const css = getRawCSS();
+  analytics.track(EVENTS.COPY_CSS_PRESSED);
 
   navigator.clipboard.writeText(css).then(() => {
     copyBtn.classList.add('copied');
