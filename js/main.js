@@ -36,7 +36,7 @@ radiusSlider.addEventListener('input', (e) => {
 });
 
 radiusSlider.addEventListener('change', () => {
-  analytics.track(EVENTS.RADIUS_UPDATED, { method: 'slider' });
+  analytics.track(EVENTS.RADIUS_UPDATED);
 });
 
 widthInput.addEventListener('change', (e) => {
